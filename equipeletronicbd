@@ -1,0 +1,113 @@
+CREATE DATABASE eletronicos;
+
+USE eletronicos;
+
+CREATE TABLE organizacao
+(
+    saida_dados INTEGER NOT NULL AUTO_INCREMENT,
+    entrada_dados VARCHAR(50),
+    emissao_relatorio VARCHAR(50) NOT NULL,
+    PRIMARY KEY (saida_dados)
+)ENGINE = MYISAM;
+
+CREATE TABLE troca
+(
+    id_troca INTEGER NOT NULL AUTO_INCREMENT,
+    id_garantia_fk INTEGER,
+    nome_cliente VARCHAR(30) NOT NULL,
+    data_cliente DATE,
+    PRIMARY KEY (id_troca) 
+)ENGINE = MYISAM;
+
+CREATE TABLE garantia
+(
+    id_garantia INTEGER NOT NULL AUTO_INCREMENT,
+    data_compra_garantia_fk INTEGER,
+    id_cliente_fk INTEGER,
+    nome_cliente VARCHAR(40) NOT NULL,
+    endereco_cliente VARCHAR(70) NOT NULL,
+    PRIMARY KEY (id_garantia)
+)ENGINE = MYISAM;
+
+CREATE TABLE cliente 
+(
+    id_cliente INTEGER NOT NULL AUTO_INCREMENT,
+    id_aparelho_fk INTEGER,
+    nome_cliente VARCHAR(40) NOT NULL,
+    endereco_cliente VARCHAR(70) NOT NULL,
+    troca_cliente VARCHAR(20),
+    compra_cliente VARCHAR(30),
+    PRIMARY KEY (id_cliente)
+)ENGINE = MYISAM;
+
+CREATE TABLE aparelho 
+(
+    id_aparelho INTEGER NOT NULL AUTO_INCREMENT,
+    data_compra_fk INTEGER,
+    saida_dados_fk INTEGER,
+    id_cliente_fk INTEGER,
+    nome_produto VARCHAR(30) NOT NULL,
+    data_garantia DATE NOT NULL,
+    modelo_aparelho VARCHAR(30),
+    PRIMARY KEY (id_aparelho)
+)ENGINE = MYISAM;
+
+ALTER TABLE troca
+ADD INDEX (id_garantia_fk);
+
+ALTER TABLE troca
+ADD FOREIGN KEY (id_garantia_fk) 
+REFERENCES garantia (id_garantia);
+
+ALTER TABLE garantia
+ADD INDEX (id_cliente_fk);
+
+ALTER TABLE garantia
+ADD FOREIGN KEY (id_cliente_fk)
+REFERENCES cliente (id_cliente);
+
+
+ALTER TABLE aparelho
+DROP data_compra_fk;
+
+ALTER TABLE aparelho
+ADD data_compra_fk INTEGER;
+
+ALTER TABLE aparelho
+ADD INDEX (saida_dados_fk);
+
+ALTER TABLE aparelho
+ADD INDEX (id_cliente_fk);
+
+ALTER TABLE aparelho 
+ADD INDEX (data_compra_fk);
+
+
+ALTER TABLE aparelho 
+ADD FOREIGN KEY (saida_dados_fk)
+REFERENCES organizacao (saida_dados);
+
+
+ALTER TABLE aparelho 
+ADD FOREIGN KEY (id_cliente_fk)
+REFERENCES cliente (id_cliente);
+
+
+ALTER TABLE aparelho
+ADD FOREIGN KEY (data_compra_fk)
+REFERENCES garantia (id_garantia);
+
+
+ALTER TABLE cliente
+ADD INDEX (id_aparelho_fk);
+
+ALTER TABLE cliente
+ADD FOREIGN KEY (id_aparelho_fk)
+REFERENCES aparelho (id_aparelho);
+
+ALTER TABLE garantia
+ADD INDEX (id_cliente_fk);
+
+ALTER TABLE garantia
+ADD FOREIGN KEY (id_cliente_fk)
+REFERENCES cliente (id_cliente);
